@@ -1,0 +1,692 @@
+/* ============================================================
+   คลังความรู้ความมั่นคงปลอดภัยไซเบอร์
+   หมึกน้ำเงินเข้ม + ทอง + เขียวหยก  |  ตัวอักษรฐาน 19px
+   ============================================================ */
+
+:root{
+  --ink:#0F2338;
+  --ink-2:#35506D;
+  --ink-3:#6E8299;
+  --paper:#EDF1F5;
+  --paper-2:#E3E9EF;
+  --surface:#FFFFFF;
+  --line:#D3DCE5;
+  --gold:#B8860F;
+  --gold-soft:#F6E9C6;
+  --teal:#147D74;
+  --teal-soft:#DCEFEC;
+  --crimson:#A8342A;
+  --crimson-soft:#F7E3E0;
+  --shadow:0 1px 2px rgba(15,35,56,.06), 0 8px 24px -12px rgba(15,35,56,.22);
+  --r:10px;
+  --bar:66px;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important}
+}
+
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"IBM Plex Sans Thai","Segoe UI",sans-serif;
+  font-size:19px;
+  line-height:1.9;
+  -webkit-font-smoothing:antialiased;
+}
+
+h1,h2,h3,h4,.font-display{font-family:"Chakra Petch","IBM Plex Sans Thai",sans-serif;line-height:1.35;letter-spacing:.01em}
+code,kbd,.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.86em}
+code{background:var(--paper-2);padding:.1em .38em;border-radius:5px;word-break:break-all}
+a{color:var(--teal)}
+button{font-family:inherit;font-size:inherit}
+
+.skip{position:absolute;left:-999px;top:0;background:var(--ink);color:#fff;padding:.6em 1em;z-index:99}
+.skip:focus{left:0}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:4px}
+
+/* ── แถบบน ─────────────────────────────────────────────── */
+.topbar{
+  position:fixed;inset:0 0 auto 0;height:var(--bar);z-index:40;
+  display:flex;align-items:center;gap:14px;padding:0 18px;
+  background:var(--ink);color:#fff;
+}
+.brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-family:"Chakra Petch",sans-serif;font-weight:600;font-size:20px;white-space:nowrap}
+.brand svg{width:24px;height:28px;fill:var(--gold)}
+.brand .tick{stroke:var(--ink);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.brand b{color:var(--gold);font-weight:600}
+
+.navtoggle{display:none;flex-direction:column;gap:5px;background:none;border:0;padding:8px;cursor:pointer}
+.navtoggle span{display:block;width:22px;height:2px;background:#fff}
+
+.xpwrap{margin-left:auto;display:flex;align-items:center;gap:12px}
+.xpring{
+  position:relative;width:46px;height:46px;flex:none;border-radius:50%;
+  display:grid;place-items:center;font-family:"Chakra Petch",sans-serif;font-weight:700;font-size:18px;
+  background:conic-gradient(var(--gold) var(--p,0%), rgba(255,255,255,.16) 0);
+}
+.xpring::after{content:"";position:absolute;inset:4px;border-radius:50%;background:var(--ink)}
+.xpring span{position:relative;z-index:1;color:var(--gold)}
+.xpmeta{min-width:150px}
+.xprank{font-size:14px;font-weight:600;line-height:1.3}
+.xptext{font-size:12px;color:#9DB2C7;line-height:1.4}
+.xpbar{height:5px;background:rgba(255,255,255,.16);border-radius:3px;overflow:hidden;margin:3px 0 2px}
+.xpbar i{display:block;height:100%;background:var(--gold);width:0;transition:width .5s ease}
+
+/* ── โครงหน้า ──────────────────────────────────────────── */
+.shell{display:grid;grid-template-columns:300px minmax(0,1fr);padding-top:var(--bar)}
+.sidebar{
+  position:sticky;top:var(--bar);height:calc(100vh - var(--bar));overflow-y:auto;
+  background:var(--surface);border-right:1px solid var(--line);
+  display:flex;flex-direction:column;
+}
+#toc{padding:22px 0 10px;flex:1}
+main{padding:38px 44px 100px;min-width:0}
+.wrap{max-width:70ch}
+
+/* ── สารบัญ ────────────────────────────────────────────── */
+.toc-course{margin-bottom:6px}
+.toc-head{
+  display:flex;align-items:center;gap:9px;width:100%;text-align:right;
+  padding:9px 20px;background:none;border:0;cursor:pointer;color:var(--ink);
+  font-family:"Chakra Petch",sans-serif;font-weight:600;font-size:16.5px;line-height:1.4;
+}
+.toc-head span{flex:1;text-align:left}
+.toc-head:hover{background:var(--paper)}
+.toc-head .dot{width:9px;height:9px;border-radius:50%;background:var(--line);flex:none}
+.toc-head.done .dot{background:var(--teal)}
+.toc-head.partial .dot{background:var(--gold)}
+.toc-list{list-style:none;margin:0;padding:0 0 8px}
+.toc-list a{
+  display:flex;gap:9px;align-items:baseline;
+  padding:6px 20px 6px 34px;font-size:16px;line-height:1.5;
+  color:var(--ink-2);text-decoration:none;border-left:3px solid transparent;
+}
+.toc-list a:hover{background:var(--paper);color:var(--ink)}
+.toc-list a.active{border-left-color:var(--gold);background:var(--gold-soft);color:var(--ink);font-weight:600}
+.toc-list a.done::before{content:"✓";color:var(--teal);font-weight:700}
+.toc-list a:not(.done)::before{content:"○";color:var(--line)}
+.toc-list a.quiz{font-style:normal;color:var(--crimson)}
+
+.sidefoot{border-top:1px solid var(--line);padding:12px 20px 18px;display:flex;flex-direction:column;align-items:flex-start;gap:2px}
+.linkbtn{background:none;border:0;padding:4px 0;color:var(--ink-3);font-size:14.5px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.linkbtn:hover{color:var(--ink)}
+.linkbtn.danger:hover{color:var(--crimson)}
+
+/* ── หน้าแรก ───────────────────────────────────────────── */
+.hero{
+  background:var(--ink);color:#fff;border-radius:var(--r);
+  padding:40px 42px;margin-bottom:34px;position:relative;overflow:hidden;
+}
+.hero::after{
+  content:"";position:absolute;right:-70px;top:-70px;width:280px;height:280px;
+  border:1px solid rgba(216,161,37,.28);border-radius:50%;
+}
+.hero::before{
+  content:"";position:absolute;right:-20px;bottom:-120px;width:220px;height:220px;
+  border:1px solid rgba(216,161,37,.16);border-radius:50%;
+}
+.hero h1{margin:0 0 12px;font-size:38px;font-weight:700;max-width:19ch}
+.hero p{margin:0;max-width:52ch;color:#C3D2E0;font-size:18px}
+.herostats{display:flex;gap:34px;margin-top:28px;position:relative;z-index:1;flex-wrap:wrap}
+.herostats div{line-height:1.3}
+.herostats b{display:block;font-family:"Chakra Petch",sans-serif;font-size:27px;color:var(--gold);font-weight:700}
+.herostats small{font-size:14px;color:#9DB2C7}
+
+.sect-title{font-size:15px;font-weight:600;color:var(--ink-3);margin:0 0 14px;font-family:"IBM Plex Sans Thai",sans-serif}
+
+.cards{display:grid;gap:18px;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));align-items:start}
+.card{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:24px 26px 20px;text-decoration:none;color:inherit;display:block;
+  box-shadow:var(--shadow);
+}
+.card:hover{border-color:var(--gold)}
+.card .code{font-size:13.5px;color:var(--gold);font-weight:600;letter-spacing:.06em}
+.card h3{margin:4px 0 8px;font-size:21px}
+.card p{margin:0 0 16px;font-size:16.5px;line-height:1.7;color:var(--ink-2)}
+.meter{height:6px;background:var(--paper-2);border-radius:3px;overflow:hidden}
+.meter i{display:block;height:100%;background:var(--teal);width:0;transition:width .4s}
+.metertext{display:flex;justify-content:space-between;font-size:14px;color:var(--ink-3);margin-top:7px}
+
+.badgebox{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.badge{
+  display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);
+  border-radius:40px;padding:7px 16px 7px 12px;font-size:15px;
+}
+.badge.off{opacity:.4}
+.badge i{font-style:normal;font-size:17px}
+
+/* ── หน้าหลักสูตร / บทเรียน ───────────────────────────── */
+.crumb{font-size:15px;color:var(--ink-3);margin-bottom:10px}
+.crumb a{color:var(--ink-3);text-decoration:none;border-bottom:1px dotted var(--line)}
+.crumb a:hover{color:var(--teal)}
+
+h1.page{font-size:33px;margin:0 0 10px;max-width:22ch}
+.lead{font-size:19px;color:var(--ink-2);max-width:66ch;margin:0 0 26px}
+
+.objbox{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:var(--r);padding:20px 26px;margin:0 0 30px;max-width:70ch}
+.objbox h4{margin:0 0 8px;font-size:17px}
+.objbox ul{margin:0;padding-left:1.25em}
+.objbox li{margin:.25em 0;font-size:17px;line-height:1.75}
+
+.lessonlist{display:flex;flex-direction:column;gap:12px;max-width:70ch}
+.lessonrow{
+  display:flex;align-items:center;gap:16px;background:var(--surface);
+  border:1px solid var(--line);border-radius:var(--r);padding:16px 20px;
+  text-decoration:none;color:inherit;
+}
+.lessonrow:hover{border-color:var(--gold)}
+.lessonrow .n{
+  width:34px;height:34px;flex:none;border-radius:50%;display:grid;place-items:center;
+  background:var(--paper);color:var(--ink-2);font-family:"Chakra Petch",sans-serif;font-weight:700;font-size:16px;
+}
+.lessonrow.done .n{background:var(--teal);color:#fff}
+.lessonrow b{display:block;font-size:18px;font-weight:600;line-height:1.45}
+.lessonrow small{color:var(--ink-3);font-size:15px}
+.lessonrow .t{margin-left:auto;color:var(--ink-3);font-size:14.5px;white-space:nowrap}
+
+/* ── เนื้อหาบทเรียน ────────────────────────────────────── */
+article.reader{max-width:70ch}
+article.reader h2{font-size:26px;margin:44px 0 12px;padding-bottom:8px;border-bottom:2px solid var(--paper-2)}
+article.reader p{margin:0 0 1.05em}
+article.reader ul,article.reader ol{padding-left:1.35em;margin:0 0 1.1em}
+article.reader li{margin:.35em 0}
+article.reader b{font-weight:600}
+
+.listbox{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px 26px;margin:0 0 22px}
+.listbox h4{margin:0 0 10px;font-size:17.5px}
+.listbox ul,.listbox ol{margin:0;padding-left:1.3em}
+
+.termlist{margin:0 0 24px;display:flex;flex-direction:column;gap:2px}
+.term{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 22px}
+.term dt{font-family:"Chakra Petch",sans-serif;font-weight:600;font-size:18px;margin-bottom:2px}
+.term dd{margin:0;color:var(--ink-2);font-size:17px;line-height:1.8}
+
+.tablewrap{overflow-x:auto;margin:0 0 24px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:16.5px;min-width:520px}
+caption{caption-side:top;text-align:left;padding:14px 20px 0;font-size:15px;color:var(--ink-3)}
+th,td{padding:12px 18px;text-align:left;vertical-align:top;line-height:1.7;border-bottom:1px solid var(--line)}
+th{background:var(--paper);font-family:"Chakra Petch",sans-serif;font-weight:600;font-size:16px}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:nth-child(even) td{background:#FAFCFD}
+
+.note{border-radius:var(--r);padding:18px 24px;margin:0 0 24px;border:1px solid;font-size:17.5px}
+.note h4{margin:0 0 6px;font-size:17.5px;display:flex;gap:8px;align-items:center}
+.note p:last-child,.note ul:last-child,.note ol:last-child{margin-bottom:0}
+.note.info{background:#EAF1F8;border-color:#C3D6E8}
+.note.tip{background:var(--teal-soft);border-color:#A9D6D0}
+.note.warn{background:var(--gold-soft);border-color:#E4CD8E}
+.note.law{background:var(--crimson-soft);border-color:#E4B8B2}
+.note.info h4{color:#1F4E7A} .note.tip h4{color:var(--teal)}
+.note.warn h4{color:#8A6508} .note.law h4{color:var(--crimson)}
+
+/* ── กระดานคะแนนรวม ────────────────────────────────────── */
+.lbtable{max-width:70ch;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--surface)}
+.lbrow{
+  display:grid;grid-template-columns:64px 1fr 60px 80px 50px 50px 50px;
+  align-items:center;padding:11px 16px;border-bottom:1px solid var(--line);gap:8px;
+}
+.lbrow:last-child{border-bottom:0}
+.lbhead{background:var(--paper);font-size:13.5px;color:var(--ink-3);font-weight:600;font-family:"Chakra Petch",sans-serif}
+.lbrank{font-family:"Chakra Petch",sans-serif;font-weight:700;font-size:17px;text-align:center}
+.lbname{display:flex;align-items:center;gap:10px;min-width:0}
+.lbname b{display:block;font-size:16px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lbname small{color:var(--ink-3);font-size:13px}
+.lbnum{text-align:center;font-size:15.5px;font-family:"IBM Plex Mono",monospace}
+.lbexp{color:var(--gold);font-weight:600}
+.lbrow.top .lbrank{font-size:20px}
+.lbrow.me{background:var(--gold-soft)}
+.lbrow.me b{color:var(--ink)}
+
+/* ── กระดานโจทย์ Jeopardy ──────────────────────────────── */
+.ctfprog{display:flex;align-items:center;gap:12px;max-width:70ch;margin-bottom:26px}
+.ctfprogbar{flex:1;height:12px;background:var(--paper-2);border-radius:6px;overflow:hidden}
+.ctfprogbar i{display:block;height:100%;background:var(--gold);width:0;transition:width .5s}
+.ctfprogtext{font-family:"Chakra Petch",sans-serif;font-weight:700;color:var(--gold);font-size:16px}
+.ctfboard{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;align-items:start}
+.ctfcol{display:flex;flex-direction:column;gap:8px}
+.ctfcat{
+  background:var(--ink);color:#fff;text-align:center;padding:9px;border-radius:8px;
+  font-family:"Chakra Petch",sans-serif;font-weight:600;font-size:14.5px;
+}
+.ctfcell{
+  display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;
+  background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 10px;
+  min-height:74px;justify-content:center;text-align:center;
+}
+.ctfcell:hover{border-color:var(--gold);background:#FFFDF6}
+.ctfpts{font-family:"Chakra Petch",sans-serif;font-weight:700;font-size:24px;color:var(--gold)}
+.ctfchtitle{font-size:12.5px;color:var(--ink-2);line-height:1.35}
+.ctfcell.done{background:var(--teal-soft);border-color:var(--teal)}
+.ctfcell.done .ctfpts{color:var(--teal);font-size:26px}
+.ctfcell.done .ctfchtitle{color:#0E5F58}
+
+@media (max-width:600px){
+  .lbrow{grid-template-columns:44px 1fr 44px 66px 44px;gap:6px;padding:10px 12px}
+  .hidesm{display:none}
+}
+
+/* ── โจทย์ฝึกแบบ CTF ───────────────────────────────────── */
+.chal{
+  background:#0C1B2C;color:#DDE8F2;border:1px solid #22405F;border-radius:var(--r);
+  padding:24px 28px;margin:32px 0;
+}
+.chal{border-color:#22405F}
+.chal.solved{border-color:#3FBFAF;box-shadow:0 0 0 1px rgba(63,191,175,.35)}
+.chalhead{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+.chalcat{
+  background:var(--gold);color:#fff;border-radius:5px;padding:3px 12px;
+  font-family:"Chakra Petch",sans-serif;font-weight:700;font-size:13px;letter-spacing:.03em;
+}
+.chalpts{color:#8FD9CE;font-size:13.5px;font-weight:600}
+.challv{color:#A9BED2;font-size:13px;border:1px solid #33526F;border-radius:20px;padding:2px 12px}
+.chaltitle{margin:0 0 10px;font-size:20px;color:#fff;font-family:"Chakra Petch",sans-serif}
+.chalbrief{font-size:16.5px;line-height:1.8;color:#C7D6E4}
+.chalbrief code{background:rgba(255,255,255,.1);color:#F0D48A}
+.chalfiles{font-size:15px;color:#A9BED2;margin-top:10px}
+.chalfiles code{background:rgba(255,255,255,.1);color:#F0D48A;margin-right:6px}
+.chaldata{
+  background:rgba(0,0,0,.35);border-radius:8px;padding:14px 16px;margin:14px 0 0;
+  font-family:"IBM Plex Mono",monospace;font-size:13.5px;line-height:1.7;
+  color:#8FD9CE;overflow-x:auto;white-space:pre-wrap;word-break:break-all;
+}
+.flagrow{display:flex;gap:10px;margin:16px 0 0;flex-wrap:wrap}
+.flaginp{
+  flex:1;min-width:220px;padding:11px 14px;border-radius:8px;
+  border:1px solid rgba(255,255,255,.22);background:rgba(0,0,0,.28);
+  color:#fff;font-family:"IBM Plex Mono",monospace;font-size:15px;
+}
+.flaginp:disabled{color:#8FD9CE;border-color:#3FBFAF}
+.chalverdict{margin-top:10px;font-size:15.5px;font-weight:600}
+.chalverdict.ok{color:#5FD6C6}
+.chalverdict.no{color:#F0908A}
+.linkbtn2{
+  background:none;border:0;color:var(--gold);font-size:15px;cursor:pointer;
+  text-decoration:underline;text-underline-offset:3px;padding:12px 0 0;margin-right:18px;
+}
+.linkbtn2:hover{color:#E8C874}
+.linkbtn2:disabled{color:#6E8299;cursor:default;text-decoration:none}
+.linkbtn2.danger{color:#F0908A}
+.chalhints{margin-top:4px}
+.hintitem{
+  background:rgba(216,161,37,.14);border-left:3px solid var(--gold);border-radius:6px;
+  padding:10px 14px;margin-top:10px;font-size:15.5px;line-height:1.75;color:#E6DCC2;
+}
+.hintitem b{color:var(--gold);font-family:"Chakra Petch",sans-serif}
+.chalsol{
+  margin-top:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);
+  border-radius:8px;padding:16px 20px;font-size:16px;line-height:1.8;
+}
+.chalsol h5{margin:0 0 8px;font-size:16.5px;color:#fff;font-family:"Chakra Petch",sans-serif}
+.chalsol code{background:rgba(0,0,0,.35);color:#F0D48A}
+.chalsol ol,.chalsol ul{padding-left:1.3em;margin:8px 0}
+.chalflag{
+  margin-top:12px;font-family:"IBM Plex Mono",monospace;font-size:14.5px;
+  color:#5FD6C6;background:rgba(0,0,0,.3);border-radius:6px;padding:10px 14px;word-break:break-all;
+}
+
+/* ── บล็อกคำสั่งและขั้นตอนปฏิบัติ ──────────────────────── */
+.codeblock{position:relative;margin:24px 0}
+.codetitle{font-size:14.5px;color:var(--ink-3);font-weight:600;margin-bottom:6px}
+.codeblock pre,.stepcmd,.stepout{
+  margin:0;background:var(--ink);color:#DDE8F2;border-radius:8px;padding:14px 18px;
+  overflow-x:auto;font-family:"IBM Plex Mono",monospace;font-size:14.5px;line-height:1.75;
+}
+.codeblock pre code,.stepcmd code,.stepout code{background:none;padding:0;color:inherit;white-space:pre}
+.stepout{background:#F4F7FA;color:var(--ink-2);border:1px solid var(--line);font-size:13.5px}
+.codenote{font-size:15px;color:var(--ink-2);margin-top:8px;line-height:1.7}
+.copybtn{
+  position:absolute;top:8px;right:8px;background:rgba(255,255,255,.14);color:#fff;
+  border:1px solid rgba(255,255,255,.22);border-radius:6px;padding:4px 12px;
+  font-size:13px;cursor:pointer;font-family:inherit;
+}
+.copybtn:hover{background:rgba(255,255,255,.26)}
+.codeblock{position:relative}
+.cmdwrap{position:relative;margin:10px 0}
+
+.walk{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  margin:32px 0;overflow:hidden;box-shadow:var(--shadow);
+}
+.walkhead{background:var(--ink);color:#fff;padding:18px 26px}
+.walktitle{font-family:"Chakra Petch",sans-serif;font-weight:600;font-size:20px;line-height:1.4}
+.walkmeta{font-size:14.5px;color:#A9BED2;margin-top:3px}
+.walksteps{list-style:none;counter-reset:w;margin:0;padding:8px 26px 22px}
+.walksteps > li{
+  counter-increment:w;position:relative;padding:18px 0 18px 46px;
+  border-bottom:1px solid var(--line);
+}
+.walksteps > li:last-child{border-bottom:0}
+.walksteps > li::before{
+  content:counter(w);position:absolute;left:0;top:18px;
+  width:30px;height:30px;border-radius:50%;background:var(--gold);color:#fff;
+  display:grid;place-items:center;font-family:"Chakra Petch",sans-serif;font-weight:700;font-size:15px;
+}
+.stept{font-family:"Chakra Petch",sans-serif;font-weight:600;font-size:18px;line-height:1.5;margin-bottom:4px}
+.stepd{font-size:17px;line-height:1.8;color:var(--ink-2)}
+.stepd code{font-size:.88em}
+.steptip,.stepwarn,.stepfix{
+  margin-top:10px;padding:10px 15px;border-radius:8px;font-size:15.5px;line-height:1.7;
+}
+.steptip{background:var(--teal-soft);color:#0E5F58}
+.stepwarn{background:var(--crimson-soft);color:var(--crimson)}
+.stepfix{background:var(--gold-soft);color:#7A5A08}
+.steptip b,.stepwarn b,.stepfix b{font-family:"Chakra Petch",sans-serif}
+.walkdone{
+  background:var(--teal-soft);border-top:1px solid #A9D6D0;color:#0E5F58;
+  padding:16px 26px;font-size:16.5px;line-height:1.75;
+}
+.walkdone b{font-family:"Chakra Petch",sans-serif}
+
+@media (max-width:900px){
+  .walksteps{padding:6px 16px 18px}
+  .walkhead{padding:16px 18px}
+  .walkdone{padding:14px 18px}
+  .codeblock pre,.stepcmd,.stepout{font-size:13.5px;padding:12px 14px}
+}
+
+/* ── ภาพประกอบ ─────────────────────────────────────────── */
+.fig{
+  margin:30px 0;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r);padding:22px 26px 18px;box-shadow:var(--shadow);
+}
+.figtitle{
+  font-family:"Chakra Petch",sans-serif;font-weight:600;font-size:17.5px;
+  margin-bottom:14px;color:var(--ink);
+}
+.figbody{overflow-x:auto}
+.figbody svg{display:block;width:100%;height:auto;max-width:100%}
+.fig figcaption{
+  margin-top:14px;padding-top:12px;border-top:1px solid var(--line);
+  font-size:16px;line-height:1.75;color:var(--ink-2);
+}
+.fig figcaption b{font-weight:600;color:var(--ink)}
+
+/* ── บัญชีผู้ใช้บนแถบบน ────────────────────────────────── */
+.acct{position:relative;flex:none}
+.acctbtn{
+  display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.16);color:#fff;border-radius:40px;
+  padding:5px 14px 5px 5px;cursor:pointer;font-size:15px;
+}
+.acctbtn:hover{background:rgba(255,255,255,.16)}
+.acctbtn.plain{padding:8px 18px;border-radius:8px;font-family:"Chakra Petch",sans-serif;font-weight:600}
+.avatar{
+  width:32px;height:32px;border-radius:50%;flex:none;object-fit:cover;
+  background:var(--gold);color:var(--ink);display:grid;place-items:center;
+  font-family:"Chakra Petch",sans-serif;font-weight:700;font-size:15px;overflow:hidden;
+}
+.avatar.big{width:96px;height:96px;font-size:40px}
+.avatar.sm{width:38px;height:38px;font-size:16px}
+.acctmenu{
+  position:absolute;right:0;top:calc(100% + 10px);background:var(--surface);
+  border:1px solid var(--line);border-radius:var(--r);min-width:210px;padding:6px;
+  box-shadow:0 18px 40px -14px rgba(15,35,56,.5);z-index:50;
+}
+.acctmenu a,.acctmenu button{
+  display:block;width:100%;text-align:left;padding:10px 14px;border:0;background:none;
+  color:var(--ink);font-size:16px;text-decoration:none;border-radius:7px;cursor:pointer;
+}
+.acctmenu a:hover,.acctmenu button:hover{background:var(--paper)}
+.acctmenu .sep{height:1px;background:var(--line);margin:5px 0}
+.acctmenu .who{padding:10px 14px 6px;font-size:14px;color:var(--ink-3);line-height:1.4}
+.acctmenu .who b{display:block;color:var(--ink);font-size:16px}
+
+/* ── ฟอร์มบัญชี ────────────────────────────────────────── */
+.authbox{max-width:440px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:32px 34px;box-shadow:var(--shadow)}
+.authbox h1{font-size:26px;margin:0 0 6px}
+.authbox .sub{color:var(--ink-2);font-size:16.5px;margin:0 0 22px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:15px;font-weight:600;color:var(--ink-2);margin-bottom:6px}
+.field input{
+  width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:8px;
+  font-size:17px;font-family:inherit;background:#fff;color:var(--ink);
+}
+.field input:focus{border-color:var(--ink)}
+.field .hint{font-size:14px;color:var(--ink-3);margin-top:5px;line-height:1.5}
+.formerr{background:var(--crimson-soft);border:1px solid #E4B8B2;color:var(--crimson);
+  border-radius:8px;padding:12px 16px;font-size:16px;margin-bottom:16px}
+.formok{background:var(--teal-soft);border:1px solid #A9D6D0;color:var(--teal);
+  border-radius:8px;padding:12px 16px;font-size:16px;margin-bottom:16px}
+.authalt{margin-top:18px;font-size:16px;color:var(--ink-2)}
+
+/* ── โปรไฟล์และเพื่อน ─────────────────────────────────── */
+.profhead{display:flex;gap:24px;align-items:center;flex-wrap:wrap;margin-bottom:26px}
+.profhead h1{margin:0 0 4px;font-size:28px}
+.profhead .uname{color:var(--ink-3);font-size:16.5px}
+.statrow{display:flex;gap:30px;flex-wrap:wrap;margin-top:12px}
+.statrow div b{display:block;font-family:"Chakra Petch",sans-serif;font-size:23px;color:var(--gold)}
+.statrow div small{font-size:14px;color:var(--ink-3)}
+
+.person{
+  display:flex;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r);padding:14px 18px;margin-bottom:10px;flex-wrap:wrap;
+}
+.person .who{flex:1;min-width:150px;line-height:1.4}
+.person .who b{display:block;font-size:17px}
+.person .who small{color:var(--ink-3);font-size:14.5px}
+.person .lv{
+  background:var(--paper);border-radius:20px;padding:5px 14px;font-size:14.5px;
+  font-family:"Chakra Petch",sans-serif;font-weight:600;color:var(--ink-2);white-space:nowrap;
+}
+.person .rank{
+  width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--gold);
+  display:grid;place-items:center;font-family:"Chakra Petch",sans-serif;font-weight:700;font-size:14px;flex:none;
+}
+.person .rank.gold{background:var(--gold);color:#fff}
+.btn.sm{padding:7px 15px;font-size:15px}
+.btn.danger{background:none;border:1px solid var(--line);color:var(--crimson)}
+.btn.danger:hover{background:var(--crimson-soft)}
+
+.keybox{background:var(--ink);color:#E8EEF4;border-radius:var(--r);padding:24px 28px;margin:32px 0 24px}.keybox h4{margin:0 0 10px;font-size:18px;color:var(--gold)}
+.keybox ul{margin:0;padding-left:1.2em}
+.keybox li{margin:.4em 0;font-size:17px;line-height:1.75}
+
+/* ── แบบฝึกหัด ─────────────────────────────────────────── */
+.ex{
+  background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--ink-3);
+  border-radius:var(--r);padding:22px 26px;margin:28px 0;box-shadow:var(--shadow);
+}
+.ex.ok{border-left-color:var(--teal)}
+.ex.no{border-left-color:var(--crimson)}
+.ex .tag{font-size:13.5px;color:var(--ink-3);font-weight:600;letter-spacing:.04em}
+.ex .q{font-size:18.5px;font-weight:600;margin:4px 0 16px;line-height:1.65;font-family:"Chakra Petch",sans-serif}
+.opts{display:flex;flex-direction:column;gap:9px;margin-bottom:16px}
+.opt{
+  display:flex;gap:11px;align-items:flex-start;padding:12px 16px;border:1px solid var(--line);
+  border-radius:8px;cursor:pointer;font-size:17px;line-height:1.65;background:#fff;
+}
+.opt:hover{border-color:var(--ink-3);background:#FBFCFD}
+.opt input{margin:.45em 0 0;accent-color:var(--ink);width:18px;height:18px;flex:none}
+.opt.sel{border-color:var(--ink);background:var(--paper)}
+.opt.right{border-color:var(--teal);background:var(--teal-soft)}
+.opt.wrong{border-color:var(--crimson);background:var(--crimson-soft)}
+.opt.locked{cursor:default}
+
+.txtin{
+  width:100%;max-width:340px;padding:11px 14px;border:1px solid var(--line);
+  border-radius:8px;font-size:17px;font-family:inherit;background:#fff;
+}
+.txtin:focus{border-color:var(--ink)}
+
+.btn{
+  background:var(--ink);color:#fff;border:0;border-radius:8px;
+  padding:11px 24px;font-size:16.5px;font-weight:600;cursor:pointer;
+  font-family:"Chakra Petch",sans-serif;
+}
+.btn:hover{background:#1B3D5F}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.ghost{background:none;color:var(--ink);border:1px solid var(--line)}
+.btn.ghost:hover{background:var(--paper)}
+.btn.gold{background:var(--gold);color:#fff}
+.btn.gold:hover{background:#9E7409}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+.feedback{margin-top:15px;padding:14px 18px;border-radius:8px;font-size:16.5px;line-height:1.75}
+.feedback.ok{background:var(--teal-soft);border:1px solid #A9D6D0}
+.feedback.no{background:var(--crimson-soft);border:1px solid #E4B8B2}
+.feedback b{display:block;margin-bottom:3px;font-family:"Chakra Petch",sans-serif}
+
+/* จับคู่ */
+.matchrow{display:grid;grid-template-columns:1fr 210px;gap:10px;align-items:center;margin-bottom:9px}
+.matchrow .l{background:var(--paper);border-radius:8px;padding:11px 15px;font-size:16.5px;line-height:1.6}
+.matchrow select{padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:16px;font-family:inherit;background:#fff;width:100%}
+.matchrow.right select{border-color:var(--teal);background:var(--teal-soft)}
+.matchrow.wrong select{border-color:var(--crimson);background:var(--crimson-soft)}
+
+/* เรียงลำดับ */
+.orderlist{list-style:none;padding:0;margin:0 0 16px;counter-reset:o}
+.orderitem{
+  display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);
+  border-radius:8px;padding:11px 15px;margin-bottom:8px;font-size:16.5px;line-height:1.6;
+}
+.orderitem .num{
+  width:28px;height:28px;flex:none;border-radius:6px;background:var(--paper);
+  display:grid;place-items:center;font-weight:700;font-family:"Chakra Petch",sans-serif;font-size:15px;
+}
+.orderitem.right{border-color:var(--teal);background:var(--teal-soft)}
+.orderitem.wrong{border-color:var(--crimson);background:var(--crimson-soft)}
+.ordbtns{margin-left:auto;display:flex;gap:4px;flex:none}
+.ordbtns button{width:32px;height:32px;border:1px solid var(--line);background:#fff;border-radius:6px;cursor:pointer;line-height:1;font-size:14px}
+.ordbtns button:hover{background:var(--paper)}
+.ordbtns button:disabled{opacity:.3;cursor:default}
+
+/* ── แล็บ ──────────────────────────────────────────────── */
+.lab{
+  background:linear-gradient(180deg,#0F2338 0,#132B44 100%);color:#DCE6EF;
+  border-radius:var(--r);padding:26px 30px;margin:34px 0;
+}
+.lab .tag{color:var(--gold);font-size:13.5px;font-weight:600;letter-spacing:.06em}
+.lab h3{margin:4px 0 6px;font-size:22px;color:#fff}
+.lab .goal{font-size:16.5px;color:#A9BED2;margin:0 0 16px}
+.lab .brief{font-size:17px;line-height:1.8}
+.lab .brief code{background:rgba(255,255,255,.1);color:#F0D48A}
+.labpanel{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:20px;margin-top:16px}
+.lab input[type=text],.lab textarea,.lab select{
+  width:100%;padding:11px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.2);
+  background:rgba(0,0,0,.25);color:#fff;font-size:16.5px;font-family:inherit;
+}
+.lab textarea{min-height:76px;resize:vertical}
+.lab label{display:block;font-size:15px;color:#A9BED2;margin-bottom:6px}
+.lab .field{margin-bottom:14px}
+.hashout{font-family:"IBM Plex Mono",monospace;font-size:14px;word-break:break-all;background:rgba(0,0,0,.3);padding:12px 14px;border-radius:8px;color:#8FD9CE;line-height:1.7}
+.hashout .diff{background:rgba(216,161,37,.35);color:#FFE08A;border-radius:2px}
+
+.strength{height:9px;border-radius:5px;background:rgba(255,255,255,.14);overflow:hidden;margin:12px 0 8px}
+.strength i{display:block;height:100%;width:0;transition:width .3s,background .3s}
+.pwstats{display:flex;gap:26px;flex-wrap:wrap;font-size:15.5px;color:#A9BED2}
+.pwstats b{color:#fff;font-family:"Chakra Petch",sans-serif}
+.pwnotes{margin:12px 0 0;padding-left:1.2em;font-size:16px;color:#C7D6E4}
+
+.mail{background:#fff;color:var(--ink);border-radius:8px;padding:20px 22px;font-size:16.5px;line-height:1.8}
+.mail .hdr{border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:14px;font-size:16px}
+.mail .hdr div{display:flex;gap:8px}
+.mail .hdr span{color:var(--ink-3);min-width:56px;flex:none}
+.clue{
+  border:1px dashed var(--ink-3);border-radius:5px;padding:1px 5px;cursor:pointer;
+  background:#fff;font:inherit;color:inherit;text-align:left;
+}
+.clue:hover{background:var(--paper)}
+.clue.on{background:var(--gold-soft);border-style:solid;border-color:var(--gold)}
+.clue.hit{background:var(--teal-soft);border-color:var(--teal);border-style:solid}
+.clue.miss{background:var(--crimson-soft);border-color:var(--crimson);border-style:solid}
+
+.urlrow{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.1)}
+.urlrow:last-child{border-bottom:0}
+.urlrow .u{flex:1;min-width:230px;font-family:"IBM Plex Mono",monospace;font-size:14.5px;word-break:break-all}
+.pill{border:1px solid rgba(255,255,255,.25);background:none;color:#DCE6EF;border-radius:30px;padding:6px 16px;font-size:15px;cursor:pointer}
+.pill.sel{background:#fff;color:var(--ink);border-color:#fff}
+.pill.right{background:var(--teal);border-color:var(--teal);color:#fff}
+.pill.wrong{background:var(--crimson);border-color:var(--crimson);color:#fff}
+.why{width:100%;font-size:15.5px;color:#A9BED2;padding-top:6px}
+
+.riskrow{padding:14px 0;border-bottom:1px solid rgba(255,255,255,.1)}
+.riskrow:last-child{border-bottom:0}
+.riskrow .name{font-size:17px;margin-bottom:8px}
+.sliders{display:flex;gap:22px;flex-wrap:wrap;align-items:center}
+.sliders label{margin:0;display:flex;align-items:center;gap:10px;font-size:15px}
+.sliders input[type=range]{width:150px;accent-color:var(--gold)}
+.scorechip{
+  margin-left:auto;border-radius:6px;padding:5px 14px;font-family:"Chakra Petch",sans-serif;
+  font-weight:700;font-size:16px;color:#fff;min-width:78px;text-align:center;
+}
+
+.ck{display:flex;gap:14px;align-items:flex-start;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.1);flex-wrap:wrap}
+.ck:last-child{border-bottom:0}
+.ck .t{flex:1;min-width:220px;font-size:16.5px;line-height:1.7}
+.ck .opts3{display:flex;gap:6px;flex:none}
+
+.labresult{margin-top:16px;padding:16px 20px;border-radius:8px;font-size:17px;line-height:1.8;background:rgba(216,161,37,.14);border:1px solid rgba(216,161,37,.4)}
+.labresult.pass{background:rgba(20,125,116,.2);border-color:rgba(80,190,178,.5)}
+.labresult h4{margin:0 0 6px;color:#fff;font-size:18px}
+.labresult ol,.labresult ul{margin:8px 0 0;padding-left:1.3em}
+
+/* ── ท้ายบท / ควิซท้ายหมวด ─────────────────────────────── */
+.finishbox{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:26px 30px;margin-top:44px;max-width:70ch;text-align:center;box-shadow:var(--shadow);
+}
+.finishbox.gate{text-align:left;border-left:4px solid var(--gold)}
+.finishbox.done{border-left:4px solid var(--teal)}
+.reqlist{list-style:none;margin:16px 0 20px;padding:0;text-align:left}
+.reqlist li{
+  display:flex;gap:12px;align-items:flex-start;padding:10px 14px;margin-bottom:8px;
+  background:var(--paper);border-radius:8px;font-size:16.5px;line-height:1.6;
+}
+.reqlist li.ok{background:var(--teal-soft)}
+.reqlist .mark{
+  width:24px;height:24px;flex:none;border-radius:50%;background:var(--line);color:#fff;
+  display:grid;place-items:center;font-size:14px;font-weight:700;margin-top:1px;
+}
+.reqlist li.ok .mark{background:var(--teal)}
+.reqlist b{display:block;font-weight:600;color:var(--ink)}
+.reqlist small{display:block;font-size:14.5px;color:var(--ink-3);margin-top:1px}
+.reqlist li.ok small{color:#0E5F58}
+.finishbox h3{margin:0 0 6px;font-size:21px}
+.finishbox p{margin:0 0 16px;color:var(--ink-2);font-size:17px}
+.pager{display:flex;justify-content:space-between;gap:12px;margin-top:26px;max-width:70ch;flex-wrap:wrap}
+
+.scoreboard{
+  background:var(--ink);color:#fff;border-radius:var(--r);padding:30px;text-align:center;margin-bottom:28px;
+}
+.scoreboard .big{font-family:"Chakra Petch",sans-serif;font-size:52px;font-weight:700;color:var(--gold);line-height:1.1}
+.scoreboard p{margin:6px 0 0;color:#A9BED2}
+
+/* ── เบ็ดเตล็ด ─────────────────────────────────────────── */
+.toaster{position:fixed;right:20px;bottom:20px;z-index:60;display:flex;flex-direction:column;gap:10px}
+.toast{
+  background:var(--ink);color:#fff;border-left:4px solid var(--gold);border-radius:8px;
+  padding:13px 20px;font-size:16px;box-shadow:0 10px 30px -8px rgba(0,0,0,.5);
+  animation:pop .3s ease;max-width:330px;
+}
+.toast.teal{border-left-color:#3FBFAF}
+@keyframes pop{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+.scrim{position:fixed;inset:var(--bar) 0 0;background:rgba(15,35,56,.45);z-index:25}
+.empty{color:var(--ink-3);padding:40px 0}
+
+/* ── มือถือ ───────────────────────────────────────────── */
+@media (max-width:900px){
+  body{font-size:18px}
+  .shell{grid-template-columns:1fr}
+  .sidebar{
+    position:fixed;top:var(--bar);bottom:0;left:0;width:300px;max-width:86vw;z-index:30;
+    transform:translateX(-102%);transition:transform .25s ease;
+  }
+  .sidebar.open{transform:none;box-shadow:0 0 40px rgba(15,35,56,.3)}
+  .navtoggle{display:flex}
+  main{padding:26px 20px 90px}
+  .hero{padding:30px 24px}
+  .hero h1{font-size:29px}
+  h1.page{font-size:27px}
+  article.reader h2{font-size:23px}
+  .xpmeta{display:none}
+  .matchrow{grid-template-columns:1fr}
+  .ex,.lab{padding:20px 18px}
+  .keybox{padding:20px 22px}
+}

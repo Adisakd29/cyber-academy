@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" rx="0" fill="#0F2338"/>
+  <!-- วงแหวนตกแต่งจาง ๆ ให้เข้าชุดกับหน้าแรกของเว็บ -->
+  <circle cx="430" cy="86" r="150" fill="none" stroke="#B8860F" stroke-opacity="0.18" stroke-width="3"/>
+  <circle cx="86" cy="440" r="120" fill="none" stroke="#B8860F" stroke-opacity="0.12" stroke-width="3"/>
+  <!-- โล่ -->
+  <path d="M256 92 L392 148 V262 c0 86-58 152-136 174 -78-22-136-88-136-174 V148 Z"
+        fill="#B8860F"/>
+  <path d="M256 128 L360 170 V262 c0 68-44 120-104 139 -60-19-104-71-104-139 V170 Z"
+        fill="#0F2338"/>
+  <!-- เครื่องหมายถูก -->
+  <path d="M204 262 l38 40 l72 -84" fill="none" stroke="#147D74" stroke-width="26"
+        stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
